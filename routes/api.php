@@ -19,3 +19,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::any('getReading', 'BookController@getReading');
 Route::any('getAllBook', 'BookController@getAllBook');
+Route::any('getCategory', 'BookController@getCategory');

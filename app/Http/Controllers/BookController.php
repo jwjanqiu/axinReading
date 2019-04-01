@@ -17,7 +17,7 @@ class BookController extends Controller
     /**
      * 获取书籍内容
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      * @author Qiu
      */
     public function getReading(Request $request)
@@ -31,7 +31,7 @@ class BookController extends Controller
     /**
      * 获取所有书籍
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      * @author Qiu
      */
     public function getAllBook(Request $request)
@@ -42,6 +42,30 @@ class BookController extends Controller
             $page = 1;
         }
         $data = BookCate::getAllBook($page);
+        return responseApi(1, '请求成功', $data);
+    }
+
+    /**
+     * 书籍章节目录
+     * @param Request $request
+     * @return JsonResponse
+     * @author Qiu
+     */
+    public function getCategory(Request $request)
+    {
+        //获取书籍名
+        if ($request->has('collection')) {
+            $collection = $request->input('collection');
+        } else {
+            return responseHttpStatus(400, '缺少collection参数');
+        }
+        //分页
+        if ($request->has('page')) {
+            $page = $request->input('page');
+        } else {
+            $page = 1;
+        }
+        $data = BookModel::getCategory($collection, $page);
         return responseApi(1, '请求成功', $data);
     }
 

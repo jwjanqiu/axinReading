@@ -50,4 +50,23 @@ class BookModel extends Model
         unset($data['_id']);
         return $data;
     }
+
+    /**
+     * 书籍章节目录
+     * @param $collection
+     * @param $page
+     * @return mixed
+     * @author Qiu
+     */
+    public static function getCategory($collection, $page)
+    {
+        $limit = 10;
+        $offset = $page > 1 ? ($page - 1) * $limit : 0;
+        $data = DB::collection($collection)->select('_id', 'title')->offset($offset)->limit($limit)->get()->toArray();
+        foreach ($data as $key => $value) {
+            $data[$key]['_id'] = (string)$value['_id'];
+            $data[$key]['title'] = $value['title'][0];
+        }
+        return $data;
+    }
 }
