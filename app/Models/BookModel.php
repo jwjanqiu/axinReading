@@ -65,7 +65,7 @@ class BookModel extends Model
         $data = DB::collection($collection)->select('_id', 'title')->offset($offset)->limit($limit)->get()->toArray();
         foreach ($data as $key => $value) {
             $data[$key]['_id'] = (string)$value['_id'];
-            $data[$key]['title'] = $value['title'][0];
+            $data[$key]['title'] = is_array($value['title']) ? $value['title'][0] : $value['title'];
         }
         return $data;
     }
