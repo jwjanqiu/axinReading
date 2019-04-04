@@ -16,7 +16,21 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-
-Route::any('getReading', 'BookController@getReading');
-Route::any('getAllBook', 'BookController@getAllBook');
-Route::any('getCategory', 'BookController@getCategory');
+Route::group(['middleware'=>'checkToken'],function (){
+    /**
+     * 获取书籍内容
+     */
+    Route::any('getReading', 'BookController@getReading');
+    /**
+     * 获取所有书籍
+     */
+    Route::any('getAllBook', 'BookController@getAllBook');
+    /**
+     * 获取书籍章节目录
+     */
+    Route::any('getCategory', 'BookController@getCategory');
+});
+/**
+ * 登录
+ */
+Route::any('login', 'LoginController@login');

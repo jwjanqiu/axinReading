@@ -8,7 +8,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BookCate;
+use App\Models\BookCateModel;
 use App\Models\BookModel;
 use Illuminate\Http\Request;
 
@@ -41,7 +41,7 @@ class BookController extends Controller
         } else {
             $page = 1;
         }
-        $data = BookCate::getAllBook($page);
+        $data = BookCateModel::getAllBook($page);
         return responseApi(1, '请求成功', $data);
     }
 

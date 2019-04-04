@@ -51,3 +51,32 @@ function responseHttpStatus($code = 200, $msg = '请求成功', $data = array(),
         return response()->json($data, $code, $headers);
     }
 }
+
+/**
+ * 随机生成字符串
+ * @return string
+ * @author Qiu
+ */
+function randomKeys()
+{
+    $output = '';
+    for ($a = 0; $a < 8; $a++) {
+        $output .= chr(mt_rand(33, 126));
+    }
+    return $output;
+}
+
+/**
+ * 判断手机号
+ * @param $mobile
+ * @return bool
+ * @author Qiu
+ */
+function checkMobile($mobile)
+{
+    if (preg_match('/^1[1-9]\d{9}$/', $mobile)) {
+        return true;
+    } else {
+        return false;
+    }
+}
