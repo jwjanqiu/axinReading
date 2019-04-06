@@ -43,7 +43,8 @@ class LoginController extends Controller
         }
         $data = CustomerModel::Login($mobile, $password);
         if ($data['code'] == 1) {
-            return responseApi(1, '登录成功', $data['token']);
+            unset($data['code']);
+            return responseApi(1, '登录成功', $data);
         } else {
             return responseApi(0, $data['msg']);
         }

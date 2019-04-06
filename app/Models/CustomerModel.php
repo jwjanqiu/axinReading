@@ -39,7 +39,8 @@ class CustomerModel extends Model
                 ));
                 $data = array(
                     'code' => 1,
-                    'token' => $token
+                    'token' => $token,
+                    'nick_name' => $result['nick_name']
                 );
             } else {
                 $data = array(
