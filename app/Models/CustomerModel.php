@@ -45,7 +45,7 @@ class CustomerModel extends Model
             } else {
                 $data = array(
                     'code' => 0,
-                    'msg' => '密码不正确'
+                    'msg' => '密码不正确',
                 );
             }
         } else {
@@ -59,12 +59,13 @@ class CustomerModel extends Model
             if (self::create($user_info)) {
                 $data = array(
                     'code' => 1,
-                    'token' => $user_info['token']
+                    'token' => $user_info['token'],
+                    'nick_name' => $user_info['nick_name']
                 );
             } else {
                 $data = array(
                     'code' => 0,
-                    'msg' => '未知原因无法注册，请稍后再试'
+                    'msg' => '未知原因无法注册，请稍后再试',
                 );
             }
         }
