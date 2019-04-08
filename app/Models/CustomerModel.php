@@ -73,6 +73,19 @@ class CustomerModel extends Model
     }
 
     /**
+     * 退出登录
+     * @param $user_id
+     * @author Qiu
+     */
+    public static function logout($user_id)
+    {
+        $data = self::where('_id', (string)$user_id)->first();
+        $data->update(array(
+            'token' => ''
+        ));
+    }
+
+    /**
      * 获取用户相关信息
      * @param $condition
      * @param array $select

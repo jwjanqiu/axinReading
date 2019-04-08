@@ -48,6 +48,18 @@ class LoginController extends Controller
         } else {
             return responseApi(0, $data['msg']);
         }
+    }
 
+    /**
+     * 退出登录
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @author Qiu
+     */
+    public function logout(Request $request)
+    {
+        $user_id = $request->get('_user_id');
+        CustomerModel::logout($user_id);
+        return responseApi(1, '已退出登录');
     }
 }

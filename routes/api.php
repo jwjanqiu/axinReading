@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::group(['middleware'=>'checkToken'],function (){
+Route::group(['middleware' => 'checkToken'], function () {
     /**
      * 获取书籍内容
      */
@@ -29,8 +29,13 @@ Route::group(['middleware'=>'checkToken'],function (){
      * 获取书籍章节目录
      */
     Route::any('getCategory', 'BookController@getCategory');
+    /**
+     * 退出登录
+     */
+    Route::any('logout', 'LoginController@logout');
 });
 /**
  * 登录
  */
 Route::any('login', 'LoginController@login');
+

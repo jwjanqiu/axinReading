@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Models\CustomerModel;
 use Closure;
+use function GuzzleHttp\Psr7\str;
 
 class CheckToken
 {
@@ -23,6 +24,7 @@ class CheckToken
         $userInfo = CustomerModel::getUserInfo(array('token' => $token));
         if ($userInfo) {
             $info = array(
+                '_user_id' => (string)$userInfo['_id'],
                 '_nick_name' => $userInfo['nick_name'],
                 '_mobile' => $userInfo['mobile']
             );
