@@ -26,6 +26,7 @@ class CheckToken
             $info = array(
                 '_user_id' => (string)$userInfo['_id'],
                 '_nick_name' => $userInfo['nick_name'],
+                '_password' => $userInfo['password'],
                 '_mobile' => $userInfo['mobile']
             );
             $request->attributes->add($info);

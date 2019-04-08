@@ -33,6 +33,10 @@ Route::group(['middleware' => 'checkToken'], function () {
      * 退出登录
      */
     Route::any('logout', 'LoginController@logout');
+    /**
+     * 修改用户信息
+     */
+    Route::any('modifyUserInfo','CustomerController@modifyUserInfo');
 });
 /**
  * 登录

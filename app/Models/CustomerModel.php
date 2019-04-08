@@ -54,7 +54,9 @@ class CustomerModel extends Model
                 'nick_name' => randomKeys(),
                 'mobile' => $mobile,
                 'password' => md5($password),
-                'token' => Crypt::encrypt(microtime())
+                'token' => Crypt::encrypt(microtime()),
+                'create_time' => (int)time(),
+                'update_time' => (int)time()
             );
             if (self::create($user_info)) {
                 $data = array(
@@ -95,6 +97,25 @@ class CustomerModel extends Model
     public static function getUserInfo($condition, $select = array())
     {
         $data = self::select($select)->where($condition)->first();
+        return $data;
+    }
+
+    /**
+     * 修改用户信息
+     * @param $data
+     * @param $user_id
+     * @return string
+     * @author Qiu
+     */
+    public static function modifyUserInfo($data, $user_id)
+    {
+        $data['update_time'] = (int)time();
+        $result = self::where('_id', (string)$user_id)->first();
+        if ($result->update($data)) {
+            $data = self::select('nick_name')->where('_id', (string)$user_id)->first();
+        } else {
+            $data = '';
+        }
         return $data;
     }
 }
