@@ -36,7 +36,11 @@ Route::group(['middleware' => 'checkToken'], function () {
     /**
      * 修改用户信息
      */
-    Route::any('modifyUserInfo','CustomerController@modifyUserInfo');
+    Route::any('modifyUserInfo', 'CustomerController@modifyUserInfo');
+    /**
+     * 书桌书籍
+     */
+    Route::any('desktop', 'BookController@desktop');
 });
 /**
  * 登录

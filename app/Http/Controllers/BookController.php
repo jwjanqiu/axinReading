@@ -69,4 +69,35 @@ class BookController extends Controller
         return responseApi(1, '请求成功', $data);
     }
 
+    /**
+     * 书桌书籍
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @author Qiu
+     */
+    public function desktop(Request $request)
+    {
+        $data = array(
+            array(
+                'image_url' => env('IMAGE_URL') . '1.jpg',
+                'bookName' => '中二病也要谈恋爱',
+                'readingNum' => rand(100, 2000),
+                'rg' => env('IMAGE_URL') . 'rg.png'
+            ),
+            array(
+                'image_url' => env('IMAGE_URL') . '2.jpg',
+                'bookName' => '齐木楠雄的灾难',
+                'readingNum' => rand(1000, 2000),
+                'rg' => env('IMAGE_URL') . 'rg.png'
+            ),
+            array(
+                'image_url' => env('IMAGE_URL') . '3.jpg',
+                'bookName' => '约定的梦幻岛',
+                'readingNum' => rand(10, 200),
+                'rg' => env('IMAGE_URL') . 'rg.png'
+            )
+        );
+        return responseApi(1, '请求成功', $data);
+    }
+
 }
