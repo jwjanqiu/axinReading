@@ -25,12 +25,18 @@ class CustomerController extends Controller
         //获取新的用户名
         if ($request->has('user_name')) {
             $new_user_name = $request->input('user_name');
+            if ($new_user_name == '') {
+                responseApi(0, '用户名不能为空');
+            }
         } else {
             return responseHttpStatus(400, '缺少user_name参数');
         }
         //获取新的密码
         if ($request->has('password')) {
             $new_password = $request->input('password');
+            if ($new_password == '') {
+                responseApi(0, '密码不能为空');
+            }
         } else {
             return responseHttpStatus(400, '缺少password参数');
         }
@@ -39,7 +45,7 @@ class CustomerController extends Controller
             $userInfo['nick_name'] = $new_user_name;
         }
         //新密码和旧密码一致时不修改
-        if ($new_password != ''){
+        if ($new_password != '') {
             if (md5($new_password) != $password) {
                 $userInfo['password'] = md5($new_password);
             } else {
