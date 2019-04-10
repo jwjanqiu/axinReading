@@ -41,6 +41,14 @@ Route::group(['middleware' => 'checkToken'], function () {
      * 书桌书籍
      */
     Route::any('desktop', 'BookController@desktop');
+    /**.
+     * 获取daily_beauty列表
+     */
+    Route::any('dailyBeautyList', 'LeadingController@getDailyBeauty');
+    /**
+     * daily_beauty详情
+     */
+    Route::any('getBeautyDetail', 'LeadingController@getBeautyDetail');
 });
 /**
  * 登录
