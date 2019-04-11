@@ -38,6 +38,8 @@ class DailyBeautyModel extends Model
             $data[$key]['create_time'] = date('Y-m-d', $value['create_time']);
             unset($value['url']);
         }
+        //统计数据条目
+        $count = count($data);
         $temp = [];
         //按日期分类
         foreach ($data as $key => $value) {
@@ -47,10 +49,11 @@ class DailyBeautyModel extends Model
         $data = [];
         //按日期分类
         foreach ($temp as $key => $value) {
-            $data[] = array(
+            $data['list'][] = array(
                 'key' => $key,
                 'value' => $value
             );
+            $data['count'] = $count;
         }
         return $data;
     }
