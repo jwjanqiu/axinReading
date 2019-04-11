@@ -35,7 +35,22 @@ class DailyBeautyModel extends Model
                 $data[$key]['title'] = '日常更新';
             }
             $data[$key]['image'] = $value['url'][0];
+            $data[$key]['create_time'] = date('Y-m-d', $value['create_time']);
             unset($value['url']);
+        }
+        $temp = [];
+        //按日期分类
+        foreach ($data as $key => $value) {
+            $temp[$value['create_time']][] = $value;
+        }
+        //清空data数据
+        $data = [];
+        //按日期分类
+        foreach ($temp as $key => $value) {
+            $data[] = array(
+                'key' => $key,
+                'value' => $value
+            );
         }
         return $data;
     }
