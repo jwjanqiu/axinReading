@@ -49,6 +49,22 @@ Route::group(['middleware' => 'checkToken'], function () {
      * daily_beauty详情
      */
     Route::any('getBeautyDetail', 'LeadingController@getBeautyDetail');
+    /**
+     * 添加新房租信息
+     */
+    Route::any('insertNewRent', 'CalRentController@insertNewRent');
+    /**
+     * 添加房租基础信息
+     */
+    Route::any('addRentBaseInfo', 'CalRentController@addRentBaseInfo');
+    /**
+     * 查询基础房租信息
+     */
+    Route::any('getRentBaseInfo', 'CalRentController@getRentBaseInfo');
+    /**
+     * 获取房租明细
+     */
+    Route::any('getAllRent', 'CalRentController@getAllRent');
 });
 /**
  * 登录
