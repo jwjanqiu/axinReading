@@ -22,7 +22,7 @@ class CalRentModel extends Model
     {
         $limit = 10;
         $offset = $current_page > 1 ? ($current_page - 1) * $limit : 0;
-        $data = self::where('user_id', (string)$user_id)->offset($offset)->limit($limit)->get();
+        $data = self::where('user_id', (string)$user_id)->offset($offset)->limit($limit)->orderBy('create_time', 'desc')->get();
         if ($data) {
             foreach ($data as $key => $value) {
                 $data[$key]['date'] = date('Y/m/d', $value['date']);
