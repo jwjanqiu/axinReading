@@ -21,7 +21,7 @@ function responseApi($code = 1, $msg = '请求成功', $data = array(), $headers
     $data = array(
         'code' => $code,
         'msg' => $msg,
-        'data' => (empty($data) || (!$data) || count($data) < 1) ? NULL : $data
+        'data' => (empty($data) || (!$data)) ? NULL : $data
     );
     return response()->json($data, 200, $headers);
 }
