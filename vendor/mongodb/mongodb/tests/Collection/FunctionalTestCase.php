@@ -3,7 +3,7 @@
 namespace MongoDB\Tests\Collection;
 
 use MongoDB\Collection;
-use MongoDB\Driver\WriteConcern;
+use MongoDB\Operation\DropCollection;
 use MongoDB\Tests\FunctionalTestCase as BaseFunctionalTestCase;
 
 /**
@@ -18,8 +18,8 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
         parent::setUp();
 
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
-
-        $this->dropCollection();
+        $operation = new DropCollection($this->getDatabaseName(), $this->getCollectionName());
+        $operation->execute($this->getPrimaryServer());
     }
 
     public function tearDown()
@@ -28,15 +28,7 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
             return;
         }
 
-        $this->dropCollection();
-    }
-
-    private function dropCollection()
-    {
-        $options = version_compare($this->getServerVersion(), '3.4.0', '>=')
-            ? ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)]
-            : [];
-
-        $this->collection->drop($options);
+        $operation = new DropCollection($this->getDatabaseName(), $this->getCollectionName());
+        $operation->execute($this->getPrimaryServer());
     }
 }

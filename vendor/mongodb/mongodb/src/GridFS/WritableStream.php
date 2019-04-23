@@ -36,10 +36,9 @@ class WritableStream
     private $buffer = '';
     private $chunkOffset = 0;
     private $chunkSize;
-    private $disableMD5;
     private $collectionWrapper;
+    private $ctx;
     private $file;
-    private $hashCtx;
     private $isClosed = false;
     private $length = 0;
 
@@ -57,9 +56,6 @@ class WritableStream
      *  * chunkSizeBytes (integer): The chunk size in bytes. Defaults to
      *    261120 (i.e. 255 KiB).
      *
-     *  * disableMD5 (boolean): When true, no MD5 sum will be generated.
-     *    Defaults to "false".
-     *
      *  * contentType (string): DEPRECATED content type to be stored with the
      *    file. This information should now be added to the metadata.
      *
@@ -76,7 +72,6 @@ class WritableStream
         $options += [
             '_id' => new ObjectId,
             'chunkSizeBytes' => self::$defaultChunkSizeBytes,
-            'disableMD5' => false,
         ];
 
         if (isset($options['aliases']) && ! \MongoDB\is_string_array($options['aliases'])) {
@@ -91,10 +86,6 @@ class WritableStream
             throw new InvalidArgumentException(sprintf('Expected "chunkSizeBytes" option to be >= 1, %d given', $options['chunkSizeBytes']));
         }
 
-        if (isset($options['disableMD5']) && ! is_bool($options['disableMD5'])) {
-            throw InvalidArgumentException::invalidType('"disableMD5" option', $options['disableMD5'], 'boolean');
-        }
-
         if (isset($options['contentType']) && ! is_string($options['contentType'])) {
             throw InvalidArgumentException::invalidType('"contentType" option', $options['contentType'], 'string');
         }
@@ -105,11 +96,7 @@ class WritableStream
 
         $this->chunkSize = $options['chunkSizeBytes'];
         $this->collectionWrapper = $collectionWrapper;
-        $this->disableMD5 = $options['disableMD5'];
-
-        if ( ! $this->disableMD5) {
-            $this->hashCtx = hash_init('md5');
-        }
+        $this->ctx = hash_init('md5');
 
         $this->file = [
             '_id' => $options['_id'],
@@ -180,7 +167,7 @@ class WritableStream
      * written. Since seeking is not supported and writes are appended, this is
      * always the end of the stream.
      *
-     * @see WritableStream::getSize()
+     * @see WriteableStream::getSize()
      * @return integer
      */
     public function tell()
@@ -232,12 +219,11 @@ class WritableStream
 
     private function fileCollectionInsert()
     {
-        $this->file['length'] = $this->length;
-        $this->file['uploadDate'] = new UTCDateTime;
+        $md5 = hash_final($this->ctx);
 
-        if ( ! $this->disableMD5) {
-            $this->file['md5'] = hash_final($this->hashCtx);
-        }
+        $this->file['length'] = $this->length;
+        $this->file['md5'] = $md5;
+        $this->file['uploadDate'] = new UTCDateTime;
 
         try {
             $this->collectionWrapper->insertFile($this->file);
@@ -265,9 +251,7 @@ class WritableStream
             'data' => new Binary($data, Binary::TYPE_GENERIC),
         ];
 
-        if ( ! $this->disableMD5) {
-            hash_update($this->hashCtx, $data);
-        }
+        hash_update($this->ctx, $data);
 
         try {
             $this->collectionWrapper->insertChunk($chunk);

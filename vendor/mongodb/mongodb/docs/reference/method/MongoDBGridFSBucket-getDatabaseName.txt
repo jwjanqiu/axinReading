@@ -26,18 +26,4 @@ Return Values
 
 The name of the database containing this bucket as a string.
 
-Examples
---------
-
-.. code-block:: php
-
-   <?php
-
-   $bucket = (new MongoDB\Client)->test->selectGridFSBucket();
-
-   var_dump($bucket->getDatabaseName());
-
-The output would then resemble::
-
-   string(4) "test"
-
+.. todo: add examples

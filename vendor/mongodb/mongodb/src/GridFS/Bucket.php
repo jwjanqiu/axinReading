@@ -51,7 +51,6 @@ class Bucket
     private $databaseName;
     private $manager;
     private $bucketName;
-    private $disableMD5;
     private $chunkSizeBytes;
     private $readConcern;
     private $readPreference;
@@ -68,9 +67,6 @@ class Bucket
      *
      *  * chunkSizeBytes (integer): The chunk size in bytes. Defaults to
      *    261120 (i.e. 255 KiB).
-     *
-     *  * disableMD5 (boolean): When true, no MD5 sum will be generated for
-     *    each stored file. Defaults to "false".
      *
      *  * readConcern (MongoDB\Driver\ReadConcern): Read concern.
      *
@@ -90,7 +86,6 @@ class Bucket
         $options += [
             'bucketName' => self::$defaultBucketName,
             'chunkSizeBytes' => self::$defaultChunkSizeBytes,
-            'disableMD5' => false,
         ];
 
         if (isset($options['bucketName']) && ! is_string($options['bucketName'])) {
@@ -103,10 +98,6 @@ class Bucket
 
         if (isset($options['chunkSizeBytes']) && $options['chunkSizeBytes'] < 1) {
             throw new InvalidArgumentException(sprintf('Expected "chunkSizeBytes" option to be >= 1, %d given', $options['chunkSizeBytes']));
-        }
-
-        if (isset($options['disableMD5']) && ! is_bool($options['disableMD5'])) {
-            throw InvalidArgumentException::invalidType('"disableMD5" option', $options['disableMD5'], 'boolean');
         }
 
         if (isset($options['readConcern']) && ! $options['readConcern'] instanceof ReadConcern) {
@@ -129,7 +120,6 @@ class Bucket
         $this->databaseName = (string) $databaseName;
         $this->bucketName = $options['bucketName'];
         $this->chunkSizeBytes = $options['chunkSizeBytes'];
-        $this->disableMD5 = $options['disableMD5'];
         $this->readConcern = isset($options['readConcern']) ? $options['readConcern'] : $this->manager->getReadConcern();
         $this->readPreference = isset($options['readPreference']) ? $options['readPreference'] : $this->manager->getReadPreference();
         $this->typeMap = isset($options['typeMap']) ? $options['typeMap'] : self::$defaultTypeMap;
@@ -480,9 +470,6 @@ class Bucket
      *  * chunkSizeBytes (integer): The chunk size in bytes. Defaults to the
      *    bucket's chunk size.
      *
-     *  * disableMD5 (boolean): When true, no MD5 sum will be generated for
-     *    the stored file. Defaults to "false".
-     *
      *  * metadata (document): User data for the "metadata" field of the files
      *    collection document.
      *
@@ -545,9 +532,6 @@ class Bucket
      *
      *  * chunkSizeBytes (integer): The chunk size in bytes. Defaults to the
      *    bucket's chunk size.
-     *
-     *  * disableMD5 (boolean): When true, no MD5 sum will be generated for
-     *    the stored file. Defaults to "false".
      *
      *  * metadata (document): User data for the "metadata" field of the files
      *    collection document.

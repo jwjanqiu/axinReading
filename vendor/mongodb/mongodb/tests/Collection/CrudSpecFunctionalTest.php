@@ -123,15 +123,11 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                 );
 
             case 'count':
-            case 'countDocuments':
             case 'find':
                 return $this->collection->{$operation['name']}(
                     isset($operation['arguments']['filter']) ? $operation['arguments']['filter'] : [],
                     array_diff_key($operation['arguments'], ['filter' => 1])
                 );
-
-            case 'estimatedDocumentCount':
-                return $this->collection->estimatedDocumentCount($operation['arguments']);
 
             case 'deleteMany':
             case 'deleteOne':
@@ -268,8 +264,6 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                 break;
 
             case 'count':
-            case 'countDocuments':
-            case 'estimatedDocumentCount':
                 $this->assertSame($expectedResult, $actualResult);
                 break;
 
@@ -358,7 +352,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                 break;
 
             default:
-                throw new LogicException('Unsupported operation: ' . $operation['name']);
+                throw new LogicException('Unsupported operation: ' . $operationName);
         }
     }
 

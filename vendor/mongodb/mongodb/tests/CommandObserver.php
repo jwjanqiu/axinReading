@@ -38,16 +38,14 @@ class CommandObserver implements CommandSubscriber
 
     public function commandStarted(CommandStartedEvent $event)
     {
-        $this->commands[$event->getRequestId()]['started'] = $event;
+        $this->commands[] = $event->getCommand();
     }
 
     public function commandSucceeded(CommandSucceededEvent $event)
     {
-        $this->commands[$event->getRequestId()]['succeeded'] = $event;
     }
 
     public function commandFailed(CommandFailedEvent $event)
     {
-        $this->commands[$event->getRequestId()]['failed'] = $event;
     }
 }

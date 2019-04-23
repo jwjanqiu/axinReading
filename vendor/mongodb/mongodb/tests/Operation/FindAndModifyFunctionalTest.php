@@ -30,8 +30,8 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($server);
             },
-            function(array $event) {
-                $this->assertObjectNotHasAttribute('readConcern', $event['started']->getCommand());
+            function(stdClass $command) {
+                $this->assertObjectNotHasAttribute('readConcern', $command);
             }
         );
     }
@@ -48,8 +48,8 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function(array $event) {
-                $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
+            function(stdClass $command) {
+                $this->assertObjectNotHasAttribute('writeConcern', $command);
             }
         );
     }
@@ -70,8 +70,8 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function(array $event) {
-                $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
+            function(stdClass $command) {
+                $this->assertObjectHasAttribute('lsid', $command);
             }
         );
     }

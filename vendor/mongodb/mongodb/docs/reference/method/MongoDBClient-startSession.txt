@@ -23,14 +23,14 @@ Definition
 
       function startSession(array $options = []): MongoDB\Driver\Session
 
-   Refer to the :php:`MongoDB\\Driver\\Manager::startSession()
-   <mongodb-driver-manager.startsession>` extension reference for accepted
-   options.
+   The ``$options`` parameter supports the following options:
+
+   .. include:: /includes/apiargs/MongoDBClient-method-startSession-option.rst
 
 Return Values
 -------------
 
-A :php:`MongoDB\Driver\Session <mongodb-driver-session>` object.
+A :php:`MongoDB\Driver\Session <mongodb-driver-session>`
 
 Errors/Exceptions
 -----------------

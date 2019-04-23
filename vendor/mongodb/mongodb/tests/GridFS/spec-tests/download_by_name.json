@@ -13,8 +13,11 @@
         "md5": "47ed733b8d10be225eceba344d533586",
         "filename": "abc",
         "contentType": "application/octet-stream",
-        "aliases": [],
-        "metadata": {}
+        "aliases": [
+
+        ],
+        "metadata": {
+        }
       },
       {
         "_id": {
@@ -28,8 +31,11 @@
         "md5": "b15835f133ff2e27c7cb28117bfae8f4",
         "filename": "abc",
         "contentType": "application/octet-stream",
-        "aliases": [],
-        "metadata": {}
+        "aliases": [
+
+        ],
+        "metadata": {
+        }
       },
       {
         "_id": {
@@ -43,8 +49,11 @@
         "md5": "eccbc87e4b5ce2fe28308fd9f2a7baf3",
         "filename": "abc",
         "contentType": "application/octet-stream",
-        "aliases": [],
-        "metadata": {}
+        "aliases": [
+
+        ],
+        "metadata": {
+        }
       },
       {
         "_id": {
@@ -58,8 +67,11 @@
         "md5": "f623e75af30e62bbd73d6df5b50bb7b5",
         "filename": "abc",
         "contentType": "application/octet-stream",
-        "aliases": [],
-        "metadata": {}
+        "aliases": [
+
+        ],
+        "metadata": {
+        }
       },
       {
         "_id": {
@@ -73,8 +85,11 @@
         "md5": "4c614360da93c0a041b22e537de151eb",
         "filename": "abc",
         "contentType": "application/octet-stream",
-        "aliases": [],
-        "metadata": {}
+        "aliases": [
+
+        ],
+        "metadata": {
+        }
       }
     ],
     "chunks": [

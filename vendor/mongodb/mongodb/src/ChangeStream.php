@@ -19,9 +19,8 @@ namespace MongoDB;
 
 use MongoDB\BSON\Serializable;
 use MongoDB\Driver\Cursor;
-use MongoDB\Driver\Exception\ConnectionException;
+use MongoDB\Driver\Exception\ConnectionTimeoutException;
 use MongoDB\Driver\Exception\RuntimeException;
-use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\ResumeTokenException;
 use IteratorIterator;
@@ -36,21 +35,13 @@ use Iterator;
  */
 class ChangeStream implements Iterator
 {
-    /**
-     * @deprecated 1.4
-     * @todo Remove this in 2.0 (see: PHPLIB-360)
-     */
-    const CURSOR_NOT_FOUND = 43;
-
-    private static $errorCodeCappedPositionLost = 136;
-    private static $errorCodeInterrupted = 11601;
-    private static $errorCodeCursorKilled = 237;
-
     private $resumeToken;
     private $resumeCallable;
     private $csIt;
     private $key = 0;
     private $hasAdvanced = false;
+
+    const CURSOR_NOT_FOUND = 43;
 
     /**
      * Constructor.
@@ -100,6 +91,7 @@ class ChangeStream implements Iterator
      */
     public function next()
     {
+        $resumable = false;
         try {
             $this->csIt->next();
             if ($this->valid()) {
@@ -115,13 +107,22 @@ class ChangeStream implements Iterator
              * free any reference to Watch. This will also free the only
              * reference to an implicit session, since any such reference
              * belongs to Watch. */
-            if ((string) $this->getCursorId() === '0') {
+            if ((string)$this->getCursorId() === '0') {
                 $this->resumeCallable = null;
             }
         } catch (RuntimeException $e) {
-            if ($this->isResumableError($e)) {
-                $this->resume();
+            if (strpos($e->getMessage(), "not master") !== false) {
+                $resumable = true;
             }
+            if ($e->getCode() === self::CURSOR_NOT_FOUND) {
+                $resumable = true;
+            }
+            if ($e instanceof ConnectionTimeoutException) {
+                $resumable = true;
+            }
+        }
+        if ($resumable) {
+            $this->resume();
         }
     }
 
@@ -131,6 +132,7 @@ class ChangeStream implements Iterator
      */
     public function rewind()
     {
+        $resumable = false;
         try {
             $this->csIt->rewind();
             if ($this->valid()) {
@@ -138,13 +140,22 @@ class ChangeStream implements Iterator
                 $this->resumeToken = $this->extractResumeToken($this->csIt->current());
             }
             // As with next(), free the callable once we know it will never be used.
-            if ((string) $this->getCursorId() === '0') {
+            if ((string)$this->getCursorId() === '0') {
                 $this->resumeCallable = null;
             }
         } catch (RuntimeException $e) {
-            if ($this->isResumableError($e)) {
-                $this->resume();
+            if (strpos($e->getMessage(), "not master") !== false) {
+                $resumable = true;
             }
+            if ($e->getCode() === self::CURSOR_NOT_FOUND) {
+                $resumable = true;
+            }
+            if ($e instanceof ConnectionTimeoutException) {
+                $resumable = true;
+            }
+        }
+        if ($resumable) {
+            $this->resume();
         }
     }
 
@@ -188,30 +199,6 @@ class ChangeStream implements Iterator
         }
 
         return $resumeToken;
-    }
-
-    /**
-     * Determines if an exception is a resumable error.
-     *
-     * @see https://github.com/mongodb/specifications/blob/master/source/change-streams/change-streams.rst#resumable-error
-     * @param RuntimeException $exception
-     * @return boolean
-     */
-    private function isResumableError(RuntimeException $exception)
-    {
-        if ($exception instanceof ConnectionException) {
-            return true;
-        }
-
-        if ( ! $exception instanceof ServerException) {
-            return false;
-        }
-
-        if (in_array($exception->getCode(), [self::$errorCodeCappedPositionLost, self::$errorCodeCursorKilled, self::$errorCodeInterrupted])) {
-            return false;
-        }
-
-        return true;
     }
 
     /**

@@ -3,8 +3,6 @@
 namespace MongoDB\Tests\Operation;
 
 use MongoDB\Driver\BulkWrite;
-use MongoDB\Driver\WriteConcern;
-use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Operation\Aggregate;
 use MongoDB\Tests\CommandObserver;
 use ArrayIterator;
@@ -12,28 +10,6 @@ use stdClass;
 
 class AggregateFunctionalTest extends FunctionalTestCase
 {
-    public function testCurrentOpCommand()
-    {
-        if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
-            $this->markTestSkipped('$currentOp is not supported');
-        }
-
-        (new CommandObserver)->observe(
-            function() {
-                $operation = new Aggregate(
-                    'admin',
-                    null,
-                    [['$currentOp' => (object) []]]
-                );
-
-                $operation->execute($this->getPrimaryServer());
-            },
-            function(array $event) {
-                $this->assertSame(1, $event['started']->getCommand()->aggregate);
-            }
-        );
-    }
-
     public function testDefaultReadConcernIsOmitted()
     {
         (new CommandObserver)->observe(
@@ -47,8 +23,8 @@ class AggregateFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function(array $event) {
-                $this->assertObjectNotHasAttribute('readConcern', $event['started']->getCommand());
+            function(stdClass $command) {
+                $this->assertObjectNotHasAttribute('readConcern', $command);
             }
         );
     }
@@ -66,8 +42,8 @@ class AggregateFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function(array $event) {
-                $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
+            function(stdClass $command) {
+                $this->assertObjectNotHasAttribute('writeConcern', $command);
             }
         );
     }
@@ -88,10 +64,12 @@ class AggregateFunctionalTest extends FunctionalTestCase
         $this->assertEquals($expectedDocuments, $results);
     }
 
+    /**
+     * @expectedException MongoDB\Driver\Exception\RuntimeException
+     */
     public function testUnrecognizedPipelineState()
     {
         $operation = new Aggregate($this->getDatabaseName(), $this->getCollectionName(), [['$foo' => 1]]);
-        $this->expectException(RuntimeException::class);
         $operation->execute($this->getPrimaryServer());
     }
 
@@ -112,8 +90,8 @@ class AggregateFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function(array $event) {
-                $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
+            function(stdClass $command) {
+                $this->assertObjectHasAttribute('lsid', $command);
             }
         );
     }
@@ -151,46 +129,6 @@ class AggregateFunctionalTest extends FunctionalTestCase
 
         $this->assertInstanceOf(ArrayIterator::class, $results);
         $this->assertEquals($expectedDocuments, iterator_to_array($results));
-    }
-
-    public function testExplainOption()
-    {
-        $this->createFixtures(3);
-
-        $pipeline = [['$match' => ['_id' => ['$ne' => 2]]]];
-        $operation = new Aggregate($this->getDatabaseName(), $this->getCollectionName(), $pipeline, ['explain' => true, 'typeMap' => ['root' => 'array']]);
-        $results = iterator_to_array($operation->execute($this->getPrimaryServer()));
-
-        $this->assertCount(1, $results);
-        $this->assertArrayHasKey('stages', $results[0]);
-    }
-
-    public function testExplainOptionWithWriteConcern()
-    {
-        if (version_compare($this->getServerVersion(), '3.4.0', '<')) {
-            $this->markTestSkipped('The writeConcern option is not supported');
-       }
-
-        $this->createFixtures(3);
-
-        $pipeline = [['$match' => ['_id' => ['$ne' => 2]]], ['$out' => $this->getCollectionName() . '.output']];
-        $options = ['explain' => true, 'writeConcern' => new WriteConcern(1)];
-
-        (new CommandObserver)->observe(
-            function() use ($pipeline, $options) {
-                $operation = new Aggregate($this->getDatabaseName(), $this->getCollectionName(), $pipeline, $options);
-
-                $results = iterator_to_array($operation->execute($this->getPrimaryServer()));
-
-                $this->assertCount(1, $results);
-                $this->assertObjectHasAttribute('stages', current($results));
-            },
-            function(array $event) {
-                $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
-            }
-        );
-
-        $this->assertCollectionCount($this->getCollectionName() . '.output', 0);
     }
 
     public function provideTypeMapOptionsAndExpectedDocuments()

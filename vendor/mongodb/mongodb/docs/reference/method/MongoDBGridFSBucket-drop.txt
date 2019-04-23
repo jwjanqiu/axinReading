@@ -26,21 +26,4 @@ Errors/Exceptions
 
 .. include:: /includes/extracts/error-driver-runtimeexception.rst
 
-Examples
---------
-
-.. code-block:: php
-
-   <?php
-
-   $database = (new MongoDB\Client)->test;
-
-   $bucket = $database->selectGridFSBucket();
-
-   $stream = fopen('php://temp', 'w+b');
-   fwrite($stream, "foobar");
-   rewind($stream);
-
-   $bucket->uploadFromStream('filename', $stream);
-
-   $bucket->drop();
+.. todo: add examples

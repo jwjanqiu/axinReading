@@ -20,8 +20,8 @@ class CreateCollectionFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function(array $event) {
-                $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
+            function(stdClass $command) {
+                $this->assertObjectNotHasAttribute('writeConcern', $command);
             }
         );
     }
@@ -42,8 +42,8 @@ class CreateCollectionFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function(array $event) {
-                $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
+            function(stdClass $command) {
+                $this->assertObjectHasAttribute('lsid', $command);
             }
         );
     }
