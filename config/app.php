@@ -228,4 +228,5 @@ return [
 
     ],
 
+    'log' => env('LOG_CHANNEL', 'single'),
 ];
