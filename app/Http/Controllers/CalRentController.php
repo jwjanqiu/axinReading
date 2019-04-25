@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BaseRentInfoModel;
 use App\Models\CalRentModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CalRentController extends Controller
 {
@@ -119,6 +120,7 @@ class CalRentController extends Controller
      */
     public function getRentBaseInfo(Request $request)
     {
+        Log::info('获取的数据: ' . json_encode($request->input()));
         $user_id = $request->get('_user_id');
         $data = BaseRentInfoModel::getRentBaseInfo($user_id);
         return responseApi(1, '请求成功', $data);
