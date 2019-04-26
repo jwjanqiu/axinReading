@@ -65,6 +65,10 @@ Route::group(['middleware' => 'checkToken'], function () {
      * 获取房租明细
      */
     Route::any('getAllRent', 'CalRentController@getAllRent');
+    /**
+     * 发送邮件
+     */
+    Route::any('sendEmail','EmailController@sendMail');
 });
 /**
  * 登录
