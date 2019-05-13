@@ -69,6 +69,10 @@ Route::group(['middleware' => 'checkToken'], function () {
      * 发送邮件
      */
     Route::any('sendEmail','EmailController@sendMail');
+    /**
+     * 获取定位信息
+     */
+    Route::any('getLocation','LocationController@getLocation');
 });
 /**
  * 登录
