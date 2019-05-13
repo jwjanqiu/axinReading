@@ -29,4 +29,18 @@ class LocationController extends Controller
             return responseApi(1, '查询成功', $result);
         }
     }
+
+    /**
+     * 上传定位信息
+     * @param Request $request
+     * @author Qiu
+     */
+    public function uploadLocation(Request $request)
+    {
+        //获取上传定位数据
+        $location = $request->input('location');
+        if ($location) {
+            \Log::info('上传定位信息: ' . json_encode($location));
+        }
+    }
 }
