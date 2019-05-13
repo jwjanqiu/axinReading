@@ -22,6 +22,7 @@ class LocationController extends Controller
         }
         //查询定位
         $result = lbs_logistics('sendLocation', $mobile);
+        \Log::info('定位信息:' . json_encode($result));
         if ((int)$result['resid'] != 0) {
             return responseApi(0, $result['resmsg']);
         } else {
