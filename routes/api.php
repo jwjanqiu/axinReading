@@ -82,3 +82,7 @@ Route::any('login', 'LoginController@login');
  * 上传定位信息
  */
 Route::any('uploadLocation', 'LocationController@uploadLocation');
+/**
+ * 小程序获取加密数据
+ */
+Route::any('wxDataDecrypt', 'WxAuth\WxDecryptController@wxDataDecrypt');
