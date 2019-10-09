@@ -84,8 +84,7 @@ return [
 
         'mongodb' => [
             'driver'   => 'mongodb',
-            'host' => env('DB_MONGO_HOST'),
-            'port' => env('DB_MONGO_PORT'),
+            'dsn' => env('DB_MONGO_DSN'),
             'database' => env('DB_MONGO_DATABASE'),
         ],
 
