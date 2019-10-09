@@ -21,7 +21,6 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
-//        return config('database.connections.mongodb.dsn');
         //手机号
         if ($request->has('mobile')) {
             $mobile = $request->input('mobile');
