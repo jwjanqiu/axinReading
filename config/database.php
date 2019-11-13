@@ -83,9 +83,13 @@ return [
         ],
 
         'mongodb' => [
-            'driver'   => 'mongodb',
-            'dsn' => env('DB_MONGO_DSN'),
+            'driver' => 'mongodb',
+            //'dsn' => env('DB_MONGO_DSN'),
             'database' => env('DB_MONGO_DATABASE'),
+            'port' => env('DB_MONGO_PORT'),
+            'host' => env('DB_MONGO_HOST'),
+            'username' => env('DB_MONGO_USERNAME'),
+            'password' => env('DB_MONGO_PASSWORD')
         ],
 
     ],
